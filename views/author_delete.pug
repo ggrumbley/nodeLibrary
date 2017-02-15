@@ -9,7 +9,7 @@ block content
 
     p #[strong Delete the following books before attempting to delete this author.]
 
-    div(style='margin-left:20px;margin-top:20px')
+    div.details
 
       h4 Books
 
@@ -26,4 +26,4 @@ block content
       div.form-group
         input#authorid.form-control(type='hidden',name='authorid', required='true', value=author._id )
 
-      button.btn.btn-primary(type='submit') Delete
+      button.btn.btn-danger(type='submit') Confirm Delete

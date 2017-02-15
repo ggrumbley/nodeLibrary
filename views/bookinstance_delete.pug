@@ -6,7 +6,7 @@ block content
 
   p #[strong Do you really want to delete this BookInstance?]
 
-  div(style="margin-left:20px")
+  div.details
 
     p #[strong ID]: #{bookinstance._id}
 
@@ -30,4 +30,4 @@ block content
     div.form-group
       input#id.form-control(type='hidden',name='id', required='true', value=bookinstance._id )
 
-    button.btn.btn-primary(type='submit') Delete
+    button.btn.btn-danger(type='submit') Confirm Delete
