@@ -27,11 +27,35 @@ exports.genre_detail = (req, res, next) => {
 }
 
 exports.genre_create_get = (req, res, next) => {
-  res.send('Genre create GET')
+  res.render('genre_form', { title: 'Create Genre' })
 }
 
 exports.genre_create_post = (req, res, next) => {
-  res.send('Genre create POST')
+  req.checkBody('name', 'Genre name required').notEmpty()
+  req.sanitize('name').escape()
+  req.sanitize('name').trim()
+
+  const errors = req.validationErrors()
+  const genre = new Genre({ name: req.body.name })
+
+  if (errors) {
+    res.render('genre_form', { title: 'Create Genre', genre, errors })
+    return
+  } else {
+    Genre.findOne({ 'name': req.body.name })
+      .exec((err, found_genre) => {
+        console.log(`found_genre: ${found_genre}`)
+        if (err) { return next(err) }
+        if (found_genre) {
+          res.redirect(found_genre.url)
+        } else {
+          genre.save((err) => {
+            if (err) { return next(err) }
+            res.redirect(genre.url)
+          })
+        }
+      })
+  }
 }
 
 exports.genre_delete_get = (req, res, next) => {
