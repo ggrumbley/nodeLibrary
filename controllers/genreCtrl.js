@@ -1,11 +1,29 @@
-const Genre = require('../models/genre');
+const Genre = require('../models/genre')
+const Book = require('../models/book')
 
-exports.genre_list = (req, res, next) => {
-  res.send('Genre list')
+const async = require('async')
+
+exports.genres = (req, res, next) => {
+  Genre.find().exec((err, genres) => {
+    if (err) { return next(err) }
+    res.render('genres', { title: 'Genres', genres })
+  })
 }
 
 exports.genre_detail = (req, res, next) => {
-  res.send(`Genre detail ${req.params.id}`)
+  async.parallel({
+    genre: (f) => Genre.findById(req.params.id).exec(f),
+    genre_books: (f) => Book.find({ 'genre': req.params.id }).exec(f)
+  },
+
+  (err, results) => {
+    if (err) { return next(err) }
+    res.render('genre_detail', {
+      title: 'Genre Detail',
+      genre: results.genre,
+      genre_books: results.genre_books
+    })
+  })
 }
 
 exports.genre_create_get = (req, res, next) => {

@@ -12,6 +12,6 @@ const BookSchema = Schema({
 
 BookSchema
   .virtual('url')
-  .get(() => `/catalog/book/${this._id}`)
+  .get(function() { return `/catalog/book/${this._id}` })
 
 module.exports = mongoose.model('Book', BookSchema)

@@ -1,11 +1,20 @@
-const BookInstance = require('../models/bookInstance')
+const BookInstance = require('../models/bookinstance')
 
-exports.bookinstance_list = (req, res, next) => {
-  res.send('BookInstance list')
+exports.bookinstances = (req, res, next) => {
+  BookInstance.find()
+    .populate('book')
+    .exec((err, bookinstances) => {
+      if (err) { return next(err) }
+      res.render('bookinstances', { title: 'Book Instance List', bookinstances })
+    })
 }
 
 exports.bookinstance_detail = (req, res, next) => {
-  res.send(`BookInstance detail ${req.params.id}`)
+  BookInstance.findById(req.params.id).populate('book')
+    .exec((err, bookinstance) => {
+      if (err) { return next(err) }
+      res.render('bookinstance_detail', { title: 'Book', bookinstance })
+    })
 }
 
 exports.bookinstance_create_get = (req, res, next) => {

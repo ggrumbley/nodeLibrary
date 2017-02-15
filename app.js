@@ -4,28 +4,40 @@ const favicon = require('serve-favicon')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const expressValidator = require('express-validator');
+
+const index = require('./routes/index')
+const users = require('./routes/users')
+const catalog = require('./routes/catalog')
+const compression = require('compression')
+const helmet = require('helmet')
+
+const app = express()
+
+app.use(helmet())
 
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/library-dev')
 const db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
-const index = require('./routes/index')
-const users = require('./routes/users')
-const catalog = require('./routes/catalog')
 
-const app = express()
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator());
 app.use(cookieParser());
+app.use(compression());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
